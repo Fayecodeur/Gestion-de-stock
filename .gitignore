@@ -1,1 +1,22 @@
 /GestionStock/dist/
+
+# Dossiers de build et distribution
+/build/
+/dist/
+
+# Fichiers temporaires générés par NetBeans
+/nbproject/private/
+
+# Fichiers compilés Java
+*.class
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+
+# Fichiers de configuration de l’IDE (optionnel)
+*.iml
+.idea/
+
+# MacOS (optionnel)
+.DS_Store
