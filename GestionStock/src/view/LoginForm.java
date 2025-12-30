@@ -148,7 +148,7 @@ public class LoginForm extends javax.swing.JFrame {
            model.User user = userDao.login(loginText, passwordText);
 
     if (user != null) {
-        DashboardForm dashboard = new DashboardForm();
+        Dashboard dashboard = new Dashboard();
         dashboard.setVisible(true);
         this.dispose();
     } else {
