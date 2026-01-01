@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : jeu. 01 jan. 2026 à 14:36
+-- Généré le : jeu. 01 jan. 2026 à 19:53
 -- Version du serveur : 8.0.30
 -- Version de PHP : 8.3.11
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `gestion_stock`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `quantity_in` int NOT NULL,
+  `quantity_out` int DEFAULT '0',
+  `purchase_price` double NOT NULL,
+  `sale_price` double NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `sales`
+--
+
+CREATE TABLE `sales` (
+  `id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  `sale_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -47,6 +76,20 @@ INSERT INTO `users` (`id`, `login`, `password`, `firstname`, `lastname`) VALUES
 --
 
 --
+-- Index pour la table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Index pour la table `sales`
+--
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Index pour la table `users`
 --
 ALTER TABLE `users`
@@ -58,10 +101,32 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT pour la table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `sales`
+--
+ALTER TABLE `sales`
+  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
