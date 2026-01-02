@@ -24,7 +24,8 @@ public class Dashboard extends javax.swing.JFrame {
   private void initDashboard() {
    
       // centrage
-      this.setLocationRelativeTo(null);
+       this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+       this.setLocationRelativeTo(null);
 }
 
 
@@ -572,11 +573,16 @@ public class Dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+         
+         LoginForm login = new LoginForm();
+         login.setVisible(true);
+        // Ferme le dashboard
+           this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnProductsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductsActionPerformed
-        // TODO add your handling code here:
+         new ProductView().setVisible(true);
+         this.setVisible(false);
     }//GEN-LAST:event_btnProductsActionPerformed
 
     /**
