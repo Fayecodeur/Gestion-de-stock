@@ -24,6 +24,29 @@ public class ProductView extends javax.swing.JFrame {
     public ProductView() {
         initComponents();
         refreshProductTable();
+                // Masquer la colonne ID
+       // Masquer la colonne ID
+        tblProducts.getColumnModel().getColumn(0).setMinWidth(0);
+        tblProducts.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblProducts.getColumnModel().getColumn(0).setWidth(0);
+
+// remplir le formulaire quand on clique sur une ligne du tableau
+tblProducts.addMouseListener(new java.awt.event.MouseAdapter() {
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        int selectedRow = tblProducts.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Colonne 0 = ID (caché)
+            txtProductName.setText(tblProducts.getValueAt(selectedRow, 1).toString()); // Nom
+            txtQuantityIn.setText(tblProducts.getValueAt(selectedRow, 2).toString()); // Qté Entrée
+            txtQuantityOut.setText(tblProducts.getValueAt(selectedRow, 3).toString()); // Qté Sortie
+            txtPurchasePrice.setText(tblProducts.getValueAt(selectedRow, 5).toString()); // Prix Achat
+            txtSalePrice.setText(tblProducts.getValueAt(selectedRow, 6).toString());     // Prix Vente
+        }
+    }
+});
+
+
         // centrage
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
@@ -235,7 +258,7 @@ public class ProductView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nom", "Quantité entrée", "Quantité sortie", "Quantité restante", "Prix achat", "Prix vente"
+                "Id", "Nom", "Quantité entrée", "Quantité sortie", "Quantité restante", "Prix achat", "Prix vente"
             }
         ));
         jScrollPane1.setViewportView(tblProducts);
@@ -306,10 +329,66 @@ public class ProductView extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnAddProductActionPerformed
 
+    
+    
+    
     private void btnUpdateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateProductActionPerformed
-        // TODO add your handling code here:
+         int selectedRow = tblProducts.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Veuillez sélectionner un produit à modifier !");
+        return;
+    }
+
+    try {
+        String name = txtProductName.getText().trim();
+        int quantityIn = Integer.parseInt(txtQuantityIn.getText().trim());
+        int quantityOut = Integer.parseInt(txtQuantityOut.getText().trim());
+        double purchasePrice = Double.parseDouble(txtPurchasePrice.getText().trim().replace(',', '.'));
+        double salePrice = Double.parseDouble(txtSalePrice.getText().trim().replace(',', '.'));
+
+        int stockRemaining = quantityIn - quantityOut;
+
+        if (stockRemaining < 10) {
+            JOptionPane.showMessageDialog(this,
+                "Attention : Stock restant inférieur à 10 !",
+                "Alerte stock faible",
+                JOptionPane.WARNING_MESSAGE);
+        }
+
+        // Récupérer l'ID caché
+        int productId = Integer.parseInt(tblProducts.getValueAt(selectedRow, 0).toString());
+
+        ProductDAO dao = new ProductDAO();
+        Product p = dao.getProductById(productId);
+
+        if (p != null) {
+            p.setName(name);
+            p.setQuantityIn(quantityIn);
+            p.setQuantityOut(quantityOut);
+            p.setPurchasePrice(purchasePrice);
+            p.setSalePrice(salePrice);
+
+            boolean success = dao.updateProduct(p);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Produit modifié avec succès !");
+                refreshProductTable();
+                clearForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors de la modification !");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Produit introuvable !");
+        }
+
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Veuillez entrer des valeurs numériques valides !");
+    }
+
     }//GEN-LAST:event_btnUpdateProductActionPerformed
 
+    
+    
+    
     private void btnAddProduct1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProduct1ActionPerformed
      
     try {
@@ -356,16 +435,17 @@ private void refreshProductTable() {
 
     for (Product p : products) {
         model.addRow(new Object[]{
-            p.getName(),
+            p.getId(),                    // ID caché
+            p.getName(),                  // Nom
             p.getQuantityIn(),
             p.getQuantityOut(),
-            p.getQuantityIn() - p.getQuantityOut() , // stock restant
-            String.format("%.2f", p.getPurchasePrice()), // format 2 décimales
-            String.format("%.2f", p.getSalePrice()),     // format 2 décimales
-                 
+            p.getQuantityIn() - p.getQuantityOut(), // stock restant
+            String.format("%.2f", p.getPurchasePrice()),
+            String.format("%.2f", p.getSalePrice())
         });
     }
 }
+
   
 
     /**
