@@ -14,25 +14,27 @@ import util.DBConnection;
 public class ProductDAO {
 
     // Ajouter un produit
-    public boolean addProduct(Product product) {
-        String sql = "INSERT INTO products(name, quantityIn, quantityOut, purchasePrice, salePrice) VALUES (?, ?, ?, ?, ?)";
+   public boolean addProduct(Product product) {
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
+    String sql = "INSERT INTO products " +
+                 "(name, quantity_in, quantity_out, purchase_price, sale_price) " +
+                 "VALUES (?, ?, ?, ?, ?)";
 
-            pst.setString(1, product.getName());
-            pst.setInt(2, product.getQuantityIn());
-            pst.setInt(3, product.getQuantityOut());
-            pst.setDouble(4, product.getPurchasePrice());
-            pst.setDouble(5, product.getSalePrice());
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
 
-            int rows = pst.executeUpdate();
-            return rows > 0;
+        pst.setString(1, product.getName());
+        pst.setInt(2, product.getQuantityIn());
+        pst.setInt(3, product.getQuantityOut());
+        pst.setDouble(4, product.getPurchasePrice());
+        pst.setDouble(5, product.getSalePrice());
 
-        } catch (SQLException e) {
-            return false;
-        }
+        return pst.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        return false;
     }
+}
 
     // Récupérer tous les produits
     public List<Product> getAllProducts() {
@@ -45,12 +47,11 @@ public class ProductDAO {
 
             while (rs.next()) {
                 Product p = new Product(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt("quantityIn"),
-                    rs.getInt("quantityOut"),
-                    rs.getDouble("purchasePrice"),
-                    rs.getDouble("salePrice")
+                   rs.getString("name"),
+                   rs.getInt("quantity_in"),      
+                   rs.getInt("quantity_out"),   
+                   rs.getDouble("purchase_price"),
+                   rs.getDouble("sale_price") 
                 );
                 products.add(p);
             }
