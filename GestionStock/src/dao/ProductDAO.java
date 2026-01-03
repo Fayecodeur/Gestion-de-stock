@@ -36,30 +36,79 @@ public class ProductDAO {
     }
 }
 
-    // Récupérer tous les produits
-    public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products";
+ // Récupérer tous les produits
+public List<Product> getAllProducts() {
+    List<Product> products = new ArrayList<>();
+    String sql = "SELECT * FROM products";
 
-        try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    try (Connection conn = DBConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
 
-            while (rs.next()) {
-                Product p = new Product(
-                   rs.getString("name"),
-                   rs.getInt("quantity_in"),      
-                   rs.getInt("quantity_out"),   
-                   rs.getDouble("purchase_price"),
-                   rs.getDouble("sale_price") 
-                );
-                products.add(p);
-            }
-
-        } catch (SQLException e) {
+        while (rs.next()) {
+            Product p = new Product(
+               rs.getInt("id"),          
+               rs.getString("name"),
+               rs.getInt("quantity_in"),      
+               rs.getInt("quantity_out"),   
+               rs.getDouble("purchase_price"),
+               rs.getDouble("sale_price") 
+            );
+            products.add(p);
         }
 
-        return products;
+    } catch (SQLException e) {
     }
+
+    return products;
+}
+
+    
+    
+ public Product getProductById(int id) {
+    String sql = "SELECT * FROM products WHERE id=?";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+        
+        pst.setInt(1, id);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            return new Product(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getInt("quantity_in"),
+                rs.getInt("quantity_out"),
+                rs.getDouble("purchase_price"),
+                rs.getDouble("sale_price")
+            );
+        }
+    } catch (SQLException e) {
+    }
+    return null;
+}
+
+
+    
+    
+    public boolean updateProduct(Product p) {
+    String sql = "UPDATE products SET name=?, quantity_in=?, quantity_out=?, purchase_price=?, sale_price=? WHERE id=?";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setString(1, p.getName());
+        pst.setInt(2, p.getQuantityIn());
+        pst.setInt(3, p.getQuantityOut());
+        pst.setDouble(4, p.getPurchasePrice());
+        pst.setDouble(5, p.getSalePrice());
+        pst.setInt(6, p.getId()); // ID unique
+
+        return pst.executeUpdate() > 0;
+    } catch (SQLException e) {
+        return false;
+    }
+}
+
+    
+    
 }
 
