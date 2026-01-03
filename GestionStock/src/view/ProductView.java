@@ -23,10 +23,10 @@ public class ProductView extends javax.swing.JFrame {
      */
     public ProductView() {
         initComponents();
-        
+        refreshProductTable();
         // centrage
-      this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-      this.setLocationRelativeTo(null);
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null);
     }
     
 
@@ -57,6 +57,8 @@ public class ProductView extends javax.swing.JFrame {
         btnDeleteProduct = new javax.swing.JButton();
         btnUpdateProduct = new javax.swing.JButton();
         btnAddProduct1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblProducts = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -227,6 +229,17 @@ public class ProductView extends javax.swing.JFrame {
                 .addGap(43, 43, 43))
         );
 
+        tblProducts.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        tblProducts.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nom", "Quantité entrée", "Quantité sortie", "Quantité restante", "Prix achat", "Prix vente"
+            }
+        ));
+        jScrollPane1.setViewportView(tblProducts);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -235,14 +248,18 @@ public class ProductView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 636, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 82, Short.MAX_VALUE))
         );
 
@@ -294,7 +311,7 @@ public class ProductView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateProductActionPerformed
 
     private void btnAddProduct1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProduct1ActionPerformed
-       btnAddProduct.addActionListener(e -> {
+     
     try {
         String name = txtProductName.getText().trim();
         int quantityIn = Integer.parseInt(txtQuantityIn.getText().trim());
@@ -317,11 +334,7 @@ public class ProductView extends javax.swing.JFrame {
     } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "Veuillez entrer des valeurs valides !");
     }
-    
-    
-    
-    
-});
+
 
 
     }//GEN-LAST:event_btnAddProduct1ActionPerformed
@@ -334,7 +347,7 @@ public class ProductView extends javax.swing.JFrame {
     txtSalePrice.setText("");
 }
  
- private void refreshProductTable() {
+private void refreshProductTable() {
     ProductDAO dao = new ProductDAO();
     List<Product> products = dao.getAllProducts();
 
@@ -343,19 +356,17 @@ public class ProductView extends javax.swing.JFrame {
 
     for (Product p : products) {
         model.addRow(new Object[]{
-            p.getId(),
             p.getName(),
             p.getQuantityIn(),
             p.getQuantityOut(),
-            p.getPurchasePrice(),
-            p.getSalePrice(),
-            (p.getQuantityIn() - p.getQuantityOut()) // stock restant
+            p.getQuantityIn() - p.getQuantityOut() , // stock restant
+            String.format("%.2f", p.getPurchasePrice()), // format 2 décimales
+            String.format("%.2f", p.getSalePrice()),     // format 2 décimales
+                 
         });
     }
 }
-   
-    
-    
+  
 
     /**
      * @param args the command line arguments
@@ -396,6 +407,8 @@ public class ProductView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblProducts;
     private javax.swing.JTextField txtProductName;
     private javax.swing.JTextField txtPurchasePrice;
     private javax.swing.JTextField txtQuantityIn;
