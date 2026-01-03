@@ -3,17 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+
 package model;
 
+import java.time.LocalDateTime;
+
 public class Product {
+
     private int id;
     private String name;
     private int quantityIn;
     private int quantityOut;
     private double purchasePrice;
     private double salePrice;
+    private LocalDateTime createdAt;
 
-    // Constructeur sans id (pour ajout)
+    // ✅ Constructeur POUR AJOUT (sans id)
     public Product(String name, int quantityIn, int quantityOut, double purchasePrice, double salePrice) {
         this.name = name;
         this.quantityIn = quantityIn;
@@ -22,7 +27,7 @@ public class Product {
         this.salePrice = salePrice;
     }
 
-    // Constructeur avec id (pour récupération depuis BDD)
+    // ✅ Constructeur POUR LECTURE BDD (avec id)
     public Product(int id, String name, int quantityIn, int quantityOut, double purchasePrice, double salePrice) {
         this.id = id;
         this.name = name;
@@ -32,22 +37,66 @@ public class Product {
         this.salePrice = salePrice;
     }
 
-    // Getters et Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // ✅ GETTERS & SETTERS
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public int getId() {
+        return id;
+    }
 
-    public int getQuantityIn() { return quantityIn; }
-    public void setQuantityIn(int quantityIn) { this.quantityIn = quantityIn; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getQuantityOut() { return quantityOut; }
-    public void setQuantityOut(int quantityOut) { this.quantityOut = quantityOut; }
+    public String getName() {
+        return name;
+    }
 
-    public double getPurchasePrice() { return purchasePrice; }
-    public void setPurchasePrice(double purchasePrice) { this.purchasePrice = purchasePrice; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public double getSalePrice() { return salePrice; }
-    public void setSalePrice(double salePrice) { this.salePrice = salePrice; }
+    public int getQuantityIn() {
+        return quantityIn;
+    }
+
+    public void setQuantityIn(int quantityIn) {
+        this.quantityIn = quantityIn;
+    }
+
+    public int getQuantityOut() {
+        return quantityOut;
+    }
+
+    public void setQuantityOut(int quantityOut) {
+        this.quantityOut = quantityOut;
+    }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // ✅ Stock restant
+    public int getStock() {
+        return quantityIn - quantityOut;
+    }
 }
